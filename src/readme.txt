@@ -8,41 +8,6 @@
 5、泛型的参数类型还可以是通配符类型。例如Class<?> classType = Class.forName("java.lang.String");
 泛型还有接口、方法等等，内容很多，需要花费一番功夫才能理解掌握并熟练应用。在此给出我曾经了解泛型时候写出的两个例子（根据看的印象写的），实现同样的功能，一个使用了泛型，一个没有使用，通过对比，可以很快学会泛型的应用，学会这个基本上学会了泛型70%的内容。
 例子一：使用了泛型
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
 class Gen<T> {
     private T ob; // 定义泛型成员变量
  
@@ -79,41 +44,6 @@ public class GenDemo {
     }
 }
 例子二：没有使用泛型
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
 class Gen2 {
     private Object ob; // 定义一个通用类型成员
  
@@ -164,37 +94,7 @@ Process finished with exit code 0
 深入泛型编辑
 原始代码
 有两个类如下，要构造两个类的对象，并打印出各自的成员x。
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
+
 public class StringFoo {
     private String x;
  
@@ -228,21 +128,7 @@ public class DoubleFoo {
 }
 重构
 因为上面的类中，成员和方法的逻辑都一样，就是类型不一样，因此考虑重构。Object是所有类的父类，因此可以考虑用Object做为成员类型，这样就可以实现通用了，实际上就是“Object泛型”，暂时这么称呼。
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
+
 public class ObjectFoo {
     private Object x;
  
@@ -259,16 +145,7 @@ public class ObjectFoo {
     }
 }
 写出Demo方法如下：
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
+
 public class ObjectFooDemo {
     public static void main(String args[]) {
         ObjectFoo strFoo = new ObjectFoo(new String("Hello Generics!"));
@@ -286,32 +163,7 @@ objFoo.getX=java.lang.Object@15db9742
 解说：在Java 5之前，为了让类有通用性，往往将参数类型、返回类型设置为Object类型，当获取这些返回类型来使用时候，必须将其“强制”转换为原有的类型或者接口，然后才可以调用对象上的方法。
 实现
 强制类型转换很麻烦，我还要事先知道各个Object具体类型是什么，才能做出正确转换。否则，要是转换的类型不对，比如将“Hello Generics!”字符串强制转换为Double,那么编译的时候不会报错，可是运行的时候就挂了。那有没有不强制转换的办法----有，改用 Java5泛型来实现。
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
+
 class GenericsFoo<T> {
     private T x;
  
@@ -357,21 +209,7 @@ GenericsFoo<Double> douFoo=new GenericsFoo<Double>(new Double("33"));
 class GenericsFoo<T extends Collection>，这样类中的泛型T只能是Collection接口的实现类，传入非Collection接口编译会出错。
 注意：<T extends Collection>这里的限定使用关键字extends，后面可以是类也可以是接口。但这里的extends已经不是继承的含义了，应该理解为T类型是实现Collection接口的类型，或者T是继承了XX类的类型。
 下面继续对上面的例子改进，我只要实现了集合接口的类型：
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
+
 public class CollectionGenFoo<T extends Collection> {
     private T x;
  
@@ -388,18 +226,7 @@ public class CollectionGenFoo<T extends Collection> {
     }
 }
 实例化的时候可以这么写：
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
+
 public class CollectionGenFooDemo {
     public static void main(String args[]) {
         CollectionGenFoo<ArrayList> listFoo = null;
@@ -417,32 +244,13 @@ public class CollectionGenFooDemo {
 虽然Java泛型简单的用 extends 统一的表示了原有的 extends 和 implements 的概念，但仍要遵循应用的体系，Java 只能继承一个类，但可以实现多个接口，所以你的某个类型需要用 extends 限定，且有多种类型的时候，只能存在一个是类，并且类写在第一位，接口列在后面，也就是：
 <T extends SomeClass & interface1 & interface2 & interface3>
 这里的例子仅演示了泛型方法的类型限定，对于泛型类中类型参数的限制用完全一样的规则，只是加在类声明的头部，如：
-1
-2
-3
+
 public class Demo<T extends Comparable & Serializable> {
     // T类型就可以用Comparable声明的方法和Seriablizable所拥有的特性了
 }
 通配符泛型
 为了解决类型被限制死了不能动态根据实例来确定的缺点，引入了“通配符泛型”，针对上面的例子，使用通配泛型格式为<? extends Collection>，“？”代表未知类型，这个类型是实现Collection接口。那么上面实现的方式可以写为：
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
+
 public class CollectionGenFooDemo {
      
     public static void main(String args[]) {
@@ -467,19 +275,7 @@ public class CollectionGenFooDemo {
 3、泛型类定义可以有多个泛型参数，中间用逗号隔开，还可以定义泛型接口，泛型方法。这些都与泛型类中泛型的使用规则类似。
 泛型方法编辑
 是否拥有泛型方法，与其所在的类是否泛型没有关系。要定义泛型方法，只需将泛型参数列表置于返回值前。如:
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
+
 public class ExampleA {
     public <T> void f(T x) {
         System.out.println(x.getClass().getName());
